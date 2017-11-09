@@ -1,0 +1,24 @@
+
+
+
+.left-container{
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  border-right: solid 2px rgba(0,0,0,.08);
+}
+.right-container{
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: 300px;
+}
+
+.mynetwork{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

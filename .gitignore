@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+dist
+yarn.lock
+*.map
+*-compiled.js
+*.xml
+src/styles/*.css
+.idea
+user_center
+/.eslintrc
+*.css
