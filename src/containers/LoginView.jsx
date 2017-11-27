@@ -35,7 +35,6 @@ export default class LoginView extends Component {
       this.props.history.push('/')
     }
     
-
   }
 
   render() {

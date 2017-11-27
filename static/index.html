@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Rappid Demo Application</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="../../build/rappid.min.css">
+    <link rel="stylesheet" type="text/css" href="css/rappid.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/theme-picker.css">
 
@@ -31,13 +31,13 @@
     </div>
 
     <!-- Rappid/JointJS dependencies: -->
-    <script src="../../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../../node_modules/lodash/index.js"></script>
-    <script src="../../node_modules/backbone/backbone.js"></script>
-    <script src="../../node_modules/graphlib/dist/graphlib.core.js"></script>
-    <script src="../../node_modules/dagre/dist/dagre.core.js"></script>
+    <script src="js/models/jquery.js"></script>
+    <script src="js/models/lodash.js"></script>
+    <script src="js/models/backbone.js"></script>
+    <script src="js/models/graphlib.core.js"></script>
+    <script src="js/models/dagre.core.js"></script>
 
-    <script src="../../build/rappid.min.js"></script>
+    <script src="js/models/rappid.min.js"></script>
 
     <!--[if IE 9]>
         <script>
@@ -57,37 +57,134 @@
     <script src="js/views/theme-picker.js"></script>
     <script src="js/models/joint.shapes.app.js"></script>
     <script>
+
         joint.setTheme('modern');
-
-        app = new App.MainView({ 
-          el: '#app' 
-        });
-
-        themePicker = new App.ThemePicker({ 
-          mainView: app 
-        });
-
+        app = new App.MainView({ el: '#app' });
+        themePicker = new App.ThemePicker({ mainView: app });
         themePicker.render().$el.appendTo(document.body);
-
         window.addEventListener('load', function() {
-            app.graph.fromJSON(JSON.parse(App.config.sampleGraphs.emergencyProcedure));
+
+
+          //  【删除target不为元素的Link】
+          var resetLinks = function () {
+            app.graph.getLinks().forEach(function(element, index){
+              var _i = element.attributes
+              // console.log(typeof _i.target.id)
+              if (typeof _i.target.id == 'string' && typeof _i.source.id == 'string') {
+                
+              } else {
+                // console.log('---2')
+                app.graph.removeCells(element)
+              }
+            });
+          }
+
+          //  【1.过滤有效的Link通知后台】
+          var checkLink = function (link) {
+            var _i = link.attributes
+            if (typeof _i.target.id == 'string' && typeof _i.source.id == 'string') {
+              console.log(`添加了Link: ${_i.source.id} --> ${_i.target.id}, ${_i.id}`)
+              
+            }
+          }
+
+          app.graph.fromJSON(JSON.parse(App.config.sampleGraphs.emergencyProcedure));
+
+          // app.graph.on('all', function(eventName, cell) {
+          //   console.log(arguments)
+          // });
+          
+
+          //  修改时判断
+          app.graph.on('change', function(child, ui) {
+
+            var type = child.attributes && child.attributes.type
+            switch (type) {
+              case 'basic.Rect':
+                console.log(`修改了basic.Rect: ${child.attributes.id}`)
+                break;
+              case 'basic.Circle':
+                console.log(`修改了basic.Circle: ${child.attributes.id}`)
+                break;
+              default:
+                break;
+            }
+            
+          });
+
+          //  拖拽（link）时判断
+          app.graph.on('change:z', function(child, index, ui) {
+            if( ui.ui === true ) {
+              resetLinks()
+              checkLink(child)
+            } else {
+              
+            }
+          });
+          
+          //  删除（节点和link）时判断
+          app.graph.on('remove', function(child, index, ui) {
+            console.log(`删除了${child.attributes.type}: ${child.attributes.id}`)
+          });
+
+          //  添加（节点）时判断
+          app.graph.on('add', function(child) {
+            
+            var type = child.attributes && child.attributes.type
+            switch (type) {
+              case 'basic.Rect':
+                console.log('basic.Rect')
+                console.log(`添加了basic.Rect: ${child.attributes.id}`)
+
+
+                var payload = {
+                  id: child.attributes.id,
+                  type: 'basic.Rect',
+                  chart: child
+                }
+
+                $.ajax({
+                  type: "POST",
+                  url: "http://10.193.1.188:8080/flowchart/v1/add",
+                  data: JSON.stringify(payload),
+                  dataType: "json",
+                  success: function (message) {
+                    console.log(message)
+                  },
+                  error: function (error) {
+                    console.log(error)
+                  }
+                });
+
+                          
+
+                $.ajax
+
+
+                break;
+              case 'basic.Circle':
+                console.log(`添加了basic.Circle: ${child.attributes.id}`)
+                break;
+              default:
+                break;
+            }
+
+          });
 
             
-            $('#btn-to-front').on('click', ()=>{
-              console.log(app.graph.toJSON())
-              //  console.log 为 temp1
-              //  app.graph.fromJSON(temp1);
-            })
+
+          //browser-sync start --server --files "*.html , css/*.css , js/config/*.js, js/models/*.js, js/views/*.js"
+
+
 
         });
-
     </script>
 
     <!-- Local file warning: -->
-    <!-- <div id="message-fs" style="display: none;">
+    <div id="message-fs" style="display: none;">
       <p>The application was open locally using the file protocol. It is recommended to access it trough a <b>Web server</b>.</p>
       <p>Please see <a href="README.md">instructions</a>.</p>
-    </div> -->
+    </div>
     <script>
         // (function() {
         //     var fs = (document.location.protocol === 'file:');

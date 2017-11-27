@@ -35,8 +35,7 @@ module.exports = {
       'react',
       'react-dom',
       'react-router',
-      './index.js',
-      './pages/entry.1.js',
+      './index.js'
     ],
 
     // entry: {
@@ -73,7 +72,18 @@ module.exports = {
                 test: /\.css$/,
                 include: path.resolve(__dirname, 'node_modules'),
                 use: ExtractTextPlugin.extract({
-                    use: 'css-loader'
+                  use: [{
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            importLoaders: 1,
+                            localIdentName:'[local]___[hash:base64:5]'
+                        }
+                    },{
+                        loader: 'postcss-loader',
+                        options: PostCss
+                    }
+                  ]
                 })
             },{
                 test: /\.scss$/,
@@ -112,7 +122,7 @@ module.exports = {
 
     plugins:[
 
-        new UglifyJSPlugin(),
+        // new UglifyJSPlugin(),
         new CleanWebpackPlugin(['build'], {
             root: path.resolve(__dirname),
             verbose: true,

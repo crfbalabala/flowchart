@@ -9,14 +9,11 @@ import { LoginView, HomeView, NotFoundView } from './containers';
 
 
 import 'styles/normalize.scss'
-import 'styles/antd.css'
 import 'styles/rewriteAntd.scss'
 import 'styles/login-view.scss'
-import 'styles/chart.scss'
 
 global.CONFIGS  = require('./config');
 global.CRFFETCH = require('./utils/fetch/index.es6');
-
 
 const PrimaryLayout = props => {
   return (

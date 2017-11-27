@@ -7,45 +7,17 @@ const CleanWebpackPlugin    = require("clean-webpack-plugin");
 const ExtractTextPlugin     = require('extract-text-webpack-plugin');
 const autoprefixer          = require('autoprefixer');
 const HtmlWebpackPlugin     = require('html-webpack-plugin');
-
 const PostCss               = require('./postcss.config.js')
-/**
- * webpack hash：
- *  1.  hash
- *      这种hash是每次编译生成的唯一hash，适合chunk不多的小项目
- *      但所有资源打上同一个chunk，无法实现持久缓存
- *  2.  chunkhash
- *      这是为每个chunk计算的hash,资源不同hash不同
- *      
- * hash计算：
- *      js：[chunkhash] 由 webpack 计算
- *      css：css 的 [contenthash] 由 webpack/extract-text-webpack-plugin 计算
- *      images/fonts：[hash] 由 webpack/file-loader 计算
- */
+
 
 
 module.exports = {
 
-    // devtool: 'cheap-module-eval-source-map',
-
     context: path.resolve(__dirname, 'src'),
-    // 所有相对路径都是相对于context
 
-    entry: [
-      './index.js',
-    ],
-
-    // entry: {
-    //   'index': './index.js',
-    //   'entry1': './pages/entry.1.js',
-    // },
-
-    /*
-     * 对于entry类型，entry就是模块入口
-     *    字符串：SPA。字符串对应模块在启动时就加载
-     *    数组：数组内所有模块会在启动时加载，数组最后一个元素作为export
-     *    对象：会打包出多个文件，具体的路径和文件名和配置有关
-     */
+    entry: {
+      app: 'index.js',
+    },
 
     output: {
         publicPath: '',
@@ -178,11 +150,13 @@ module.exports = {
           // 以前你可能这样引用 import { Nav } from '../../components'
           // 现在你可以这样引用 import { Nav } from 'app/components'
     
-          style: path.resolve(__dirname,'src/styles')
+          style: path.resolve(__dirname,'src/styles'),
           // 以前你可能这样引用 import '../../../styles/mixins.scss'
           // 现在你可以这样引用 import 'style/mixins.scss'
     
           // 注意：别名只能在.js文件中使用。
+
+         
         }
     },
 

@@ -37,7 +37,7 @@ module.exports = {
     // ],
 
     entry: {
-      'index': './index.js',
+      'index':  './index.js',
       'entry1': './pages/entry.1.js',
     },
 
