@@ -32,16 +32,14 @@ export default class LoginView extends Component {
     this.checkIsLogin()
 
     return(
-      <div>
-        <Iframe url="../static/index.html"
-        width="450px"
-        height="450px"
+      <Iframe url="../static/index.html"
+        width="100%"
+        height="100%"
         id="myId"
         className="myClassname"
         display="initial"
         position="relative"
         allowFullScreen/>
-    </div>
     )
   }
 }
